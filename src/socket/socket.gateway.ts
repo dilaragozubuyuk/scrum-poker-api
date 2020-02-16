@@ -42,6 +42,11 @@ export class SocketGateway {
         }
     }
 
+    @SubscribeMessage('point')
+    async setPoint(client: Socket, data): Promise<any> {
+        this.server.to(data.id).emit('point', data.point);
+    }
+
     async sendMessage(data: string) {
         this.server.emit('message', data);
     }
