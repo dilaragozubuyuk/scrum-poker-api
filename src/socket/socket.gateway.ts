@@ -17,7 +17,6 @@ export class SocketGateway {
     room = '';
     users = {};
 
-
     @SubscribeMessage('message')
     async getMessage(@MessageBody() data: string): Promise<string> {
         return data;
@@ -39,7 +38,6 @@ export class SocketGateway {
         this.server.emit('message', data);
     }
 
-
     @SubscribeMessage('joinRoom')
     async joinRoom(client: Socket, data: any): Promise<any> {
 
@@ -48,9 +46,6 @@ export class SocketGateway {
             client.join(data.id);
             this.server.to(data.id).emit('joined', { user: data.user, count: this.users[data.id] });
         }
-
-
-
     }
 
     @SubscribeMessage('leaveRoom')

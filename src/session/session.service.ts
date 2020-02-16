@@ -9,11 +9,6 @@ import { UpdateSessionDTO } from 'src/dto/update-session.dto';
 export class SessionService {
     constructor(@InjectModel('Session') private readonly sessionModel: Model<Session>) { }
 
-    // async getTasks(): Promise<Task[]> {
-    //     const tasks = await this.taskModel.find().exec();
-    //     return tasks;
-    // }
-
     async getSession(id): Promise<Session[]> {
         const session = await this.sessionModel.findById(id).exec();
         return session;
@@ -30,9 +25,4 @@ export class SessionService {
         return editedSession;
     }
 
-    // async editTask(postID, createTaskDTO: CreateTaskDTO): Promise<Task> {
-    //     const editedTask = await this.taskModel
-    //       .findByIdAndUpdate(postID, createTaskDTO, { new: true });
-    //     return editedTask;
-    //   }
 }
