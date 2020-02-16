@@ -44,7 +44,7 @@ export class SocketGateway {
 
     @SubscribeMessage('point')
     async setPoint(client: Socket, data): Promise<any> {
-        this.server.to(data.id).emit('point', data.point);
+        this.server.to(data.id).emit('point', {point: data.point, user: data.user});
     }
 
     async sendMessage(data: string) {
@@ -57,17 +57,20 @@ export class SocketGateway {
     // }
 
     @SubscribeMessage('joinRoom')
-    async joinRoom(client: Socket, room: string): Promise<any> {
-        client.join(room);
-        this.room = room;
-        this.users[room]++;
-        console.log(this.users[room]);
-        client.on(room, (data) => {
-            console.log('connected to room');
-            if (data.point) {
-                this.server.to(room).emit('point', data.point);
-            }
-        });
+    async joinRoom(client: Socket, data: any): Promise<any> {
+
+        console.log(this.users[data.id]);
+        this.users[data.id]++;
+        client.join(data.id);
+        this.server.to(data.id).emit('joined', { user: data.user, count: this.users[data.id] });
+
+
+        // client.on(data.id, (data) => {
+        //     console.log('connected to room');
+        //     if (data.point) {
+        //         this.server.to(room).emit('point', data.point);
+        //     }
+        // });
 
         // client.on('joined', (data) => {
         //     console.log('connected to room');
@@ -78,7 +81,6 @@ export class SocketGateway {
 
         //this.users++;
         //this.server.to(room).emit('users', this.users);
-        this.server.to(room).emit('joined', this.users[room]);
         //this.server.to(room).emit(room, 'bbbb');
 
         // console.log(roomName);
@@ -89,9 +91,9 @@ export class SocketGateway {
     }
 
     @SubscribeMessage('leaveRoom')
-    async leaveRoom(client: Socket, room: string): Promise<any> {
-        client.leave(room);
-        client.emit('leftRoom', room);
+    async leaveRoom(client: Socket, data: any): Promise<any> {
+        client.leave(data.id);
+        client.emit('leftRoom', data.user);
         // console.log(roomName);
         // this.server.on(roomName, () => {
         //    console.log('connected to room');
