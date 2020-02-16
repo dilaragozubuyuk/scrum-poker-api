@@ -7,8 +7,7 @@ export class SocketController {
 
     @Get()
     getHello() {
-       // console.log('sss');
-        this.socketGateway.sendMessage('aaaaaa');
+        this.socketGateway.sendMessage('message');
 
         return {};
     }
